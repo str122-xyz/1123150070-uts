@@ -20,7 +20,27 @@ class GoogleSignInButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: isLoading,
+        child: isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/icons/google_logo.png', height: 22),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Lanjutkan dengan Google',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
