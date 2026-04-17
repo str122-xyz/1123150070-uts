@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "596261260198",
+    "project_id": "project-uts-ngops",
+    "storage_bucket": "project-uts-ngops.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596261260198:android:90cfb9f79989a52a0a1d67",
+        "android_client_info": {
+          "package_name": "com.example.ngopss"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFgn4HKyzNX_bRSLCTwMS418QDXZBx4Kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
