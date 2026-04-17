@@ -5,6 +5,58 @@ class AppTheme {
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Poppins',
+
+      //Kustomisasi Font
+      textTheme: const TextTheme(
+        //untuk Judul/Heading (Title)
+        displayLarge: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textPrimary,
+        ),
+        titleLarge: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
+        titleMedium: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
+
+        //untuk Isi/Deskripsi Panjang (Body)
+        bodyLarge: TextStyle(
+          fontFamily: 'Lora',
+          fontSize: 16,
+          color: AppColors.textPrimary,
+          height: 1.5,
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: 'Lora',
+          fontSize: 14,
+          color: AppColors.textSecondary,
+          height: 1.5,
+        ),
+
+        //untuk Teks Fungsional/Kecil (Caption, Harga, Kategori)
+        labelLarge: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primary,
+        ),
+        labelSmall: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 11,
+          color: AppColors.textSecondary,
+        ),
+      ),
+
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
