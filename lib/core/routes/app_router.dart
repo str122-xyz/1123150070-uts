@@ -5,7 +5,6 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/verify_email_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
-import '../../main.dart'; // Buat SplashPage
 
 class AppRouter {
   static const String splash = '/';
