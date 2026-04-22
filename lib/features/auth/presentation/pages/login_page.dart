@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../../../../core/routes/app_router.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_header.dart';
@@ -111,6 +111,110 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text('Kirim'),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoading = context.watch<AuthProvider>().isLoading;
+
+    return LoadingOverlay(
+      isLoading: isLoading,
+      message: 'Sedang mengolah datamu...',
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 32),
+                  const AuthHeader(
+                    icon: Icons.local_cafe_outlined,
+                    title: 'Selamat Datang',
+                    subtitle: 'Masuk ke akunmu untuk ngops',
+                  ),
+                  const SizedBox(height: 32),
+                  CustomTextField(
+                    label: 'Email',
+                    hint: 'contoh@email.com',
+                    controller: _emailCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    prefixIcon: const Icon(Icons.email_outlined),
+                    validator: (v) {
+                      if (v?.isEmpty ?? true) return 'Email wajib diisi';
+                      if (!EmailValidator.validate(v!))
+                        return 'Format email salah';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  CustomTextField(
+                    label: 'Password',
+                    hint: 'Masukkan password',
+                    controller: _passCtrl,
+                    obscureText: !_showPass,
+                    prefixIcon: const Icon(Icons.lock_outlined),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _showPass ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () => setState(() => _showPass = !_showPass),
+                    ),
+                    validator: (v) =>
+                        (v?.isEmpty ?? true) ? 'Password wajib diisi' : null,
+                  ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => _showForgotPasswordDialog(context),
+                      child: Text(
+                        'Lupa Password?',
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  CustomButton(
+                    label: 'Masuk',
+                    onPressed: _loginEmail,
+                    isLoading: isLoading,
+                  ),
+                  const SizedBox(height: 20),
+                  const DividerWithText(text: 'atau masuk dengan'),
+                  const SizedBox(height: 20),
+                  GoogleSignInButton(
+                    onPressed: _loginGoogle,
+                    isLoading: isLoading,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Belum punya akun? '),
+                      GestureDetector(
+                        onTap: () => Navigator.pushReplacementNamed(
+                          context,
+                          AppRouter.register,
+                        ),
+                        child: Text(
+                          'Daftar',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

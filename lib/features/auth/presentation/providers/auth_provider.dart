@@ -65,6 +65,35 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  //Login with Email
+  Future<bool> loginWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    _setLoading();
+    try {
+      final credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      _firebaseUser = credential.user;
+
+      if (!(_firebaseUser?.emailVerified ?? false)) {
+        _tempEmail = email;
+        _tempPassword = password;
+        _status = AuthStatus.emailNotVerified;
+        notifyListeners();
+        return false;
+      }
+
+      return await _verifyTokenToBackend();
+    } on FirebaseAuthException catch (e) {
+      _setError(_mapFirebaseError(e.code));
+      return false;
+    }
+  }
+
+  //Login with Google
   Future<bool> loginWithGoogle() async {
     _setLoading();
     try {
