@@ -11,11 +11,25 @@ class SecureStorageService {
   );
 
   static const _keyToken = 'auth_token';
+  static const _keyOnboarding = 'has_seen_onboarding';
 
+  //auth token
   static Future<void> saveToken(String token) async =>
       _storage.write(key: _keyToken, value: token);
 
   static Future<String?> getToken() async => _storage.read(key: _keyToken);
 
-  static Future<void> clearAll() async => _storage.deleteAll();
+  //onboarding Logic
+  static Future<void> setOnboardingSeen() async =>
+      _storage.write(key: _keyOnboarding, value: 'true');
+
+  static Future<bool> hasSeenOnboarding() async {
+    final value = await _storage.read(key: _keyOnboarding);
+    return value == 'true';
+  }
+
+  //clear
+  static Future<void> clearAll() async {
+    await _storage.delete(key: _keyToken);
+  }
 }
