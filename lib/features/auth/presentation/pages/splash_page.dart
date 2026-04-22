@@ -39,23 +39,13 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.primary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.coffee_rounded, size: 80, color: Colors.white),
-            SizedBox(height: 16),
-            Text(
-              'Ngopss',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 2,
-              ),
-            ),
+            Image.asset('assets/icons/app_icon.png', height: 150, width: 150),
           ],
         ),
       ),
