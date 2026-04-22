@@ -130,6 +130,7 @@ class _SplashContent extends StatelessWidget {
             subtitle,
             textAlign: TextAlign.center,
             style: const TextStyle(
+              fontFamily: 'Lora',
               fontSize: 15,
               color: AppColors.textSecondary,
               height: 1.5,
