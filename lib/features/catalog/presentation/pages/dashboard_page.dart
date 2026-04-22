@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../data/models/product_model.dart';
 import '../providers/catalog_provider.dart';
@@ -143,7 +142,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           //Todo: cart
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${product.name} ditambah1'),
+                              content: Text('${product.name} ditambah!'),
                               duration: const Duration(seconds: 1),
                             ),
                           );
