@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ngopss/core/constants/app_colors.dart';
-import 'package:ngopss/features/cart/presentation/pages/cart_page.dart';
+import 'package:ngopss/core/routes/app_router.dart';
 import 'package:ngopss/features/cart/presentation/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -47,13 +47,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 IconButton(
                   icon: const Icon(Icons.shopping_cart_outlined),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CartPage()),
-                    );
+                    Navigator.pushNamed(context, AppRouter.cart);
                   },
                 ),
-                //Badge angka merah muncul jika ada barang
+                //badge angka merah muncul jika ada barang
                 if (context.watch<CartProvider>().itemCount > 0)
                   Positioned(
                     right: 8,
