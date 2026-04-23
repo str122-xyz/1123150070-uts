@@ -26,4 +26,45 @@ class CartProvider extends ChangeNotifier {
     });
     return total;
   }
+
+  //tambah barang keranjang
+  void addItem(ProductModel product) {
+    if (_items.containsKey(product.id)) {
+      _items.update(
+        product.id,
+        (existingCartItem) => CartItem(
+          product: existingCartItem.product,
+          quantity: existingCartItem.quantity + 1,
+        ),
+      );
+    } else {
+      _items.putIfAbsent(product.id, () => CartItem(product: product));
+    }
+    notifyListeners();
+  }
+
+  //mengurangi jumlah brg
+  void removeItem(String productId) {
+    if (!_items.containsKey(productId)) return;
+
+    if (_items[productId]!.quantity > 1) {
+      //jika lebih dari 1, kurangi jumlahny
+      _items.update(
+        productId,
+        (existingCartItem) => CartItem(
+          product: existingCartItem.product,
+          quantity: existingCartItem.quantity - 1,
+        ),
+      );
+    } else {
+      _items.remove(productId);
+    }
+    notifyListeners();
+  }
+
+  //hapus semua isi keranjang
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
 }
