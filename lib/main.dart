@@ -5,7 +5,7 @@ import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/routes/app_router.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
-import 'features/catalog/presentation/providers/catalog_provider.dart';
+import 'features/catalog/presentation/providers/product_provider.dart';
 import 'features/cart/presentation/providers/cart_provider.dart';
 
 void main() async {

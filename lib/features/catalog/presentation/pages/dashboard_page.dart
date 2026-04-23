@@ -5,7 +5,7 @@ import 'package:ngopss/features/cart/presentation/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../data/models/product_model.dart';
-import '../providers/catalog_provider.dart';
+import '../providers/product_provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
