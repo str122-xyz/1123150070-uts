@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ngopss/core/constants/app_colors.dart';
+import 'package:ngopss/features/cart/presentation/pages/cart_page.dart';
+import 'package:ngopss/features/cart/presentation/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../data/models/product_model.dart';
@@ -38,17 +41,43 @@ class _DashboardPageState extends State<DashboardPage> {
             ],
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.shopping_cart_outlined),
-              onPressed: () {
-                // TODO: Navigasi ke Keranjang
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Keranjang segera hadir!')),
-                );
-              },
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart_outlined),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CartPage()),
+                    );
+                  },
+                ),
+                //Badge angka merah muncul jika ada barang
+                if (context.watch<CartProvider>().itemCount > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${context.watch<CartProvider>().itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             IconButton(
-              icon: const Icon(Icons.logout),
+              icon: const Icon(Icons.logout_outlined),
               onPressed: () => context.read<AuthProvider>().logout(),
             ),
           ],
@@ -139,11 +168,14 @@ class _DashboardPageState extends State<DashboardPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          //Todo: cart
+                          context.read<CartProvider>().addItem(product);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${product.name} ditambah!'),
+                              content: Text(
+                                '${product.name} ditambah ke keranjang!',
+                              ),
                               duration: const Duration(seconds: 1),
+                              backgroundColor: AppColors.primary,
                             ),
                           );
                         },
