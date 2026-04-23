@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../data/models/product_model.dart';
 import '../../data/repositories/product_repository.dart';
+import '../../data/repositories/product_repository_impl.dart';
 
 class CatalogProvider extends ChangeNotifier {
-  final ProductRepository _repository = ProductRepository();
+  final ProductRepository _repository = ProductRepositoryImpl();
   List<ProductModel> _products = [];
   bool _isLoading = false;
 
