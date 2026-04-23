@@ -5,7 +5,8 @@ import '../../features/auth/presentation/pages/verify_email_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
-import 'package:ngopss/features/catalog/presentation/pages/dashboard_page.dart';
+import '../../features/catalog/presentation/pages/dashboard_page.dart';
+import 'auth_guard.dart';
 
 class AppRouter {
   static const String splash = '/';
@@ -22,7 +23,9 @@ class AppRouter {
     login: (_) => const LoginPage(),
     register: (_) => const RegisterPage(),
     verifyEmail: (_) => const VerifyEmailPage(),
-    dashboard: (_) => const DashboardPage(),
-    cart: (_) => const CartPage(),
+
+    //bungkus auth guard
+    dashboard: (_) => const AuthGuard(child: DashboardPage()),
+    cart: (_) => const AuthGuard(child: CartPage()),
   };
 }
