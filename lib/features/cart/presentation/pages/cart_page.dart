@@ -173,13 +173,58 @@ class CartPage extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              //Todo: logika proses bayar
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Proses Checkout'),
+                              if (cart.items.isEmpty)
+                                return; //kalo kosong ga bisa diklik
+
+                              //popup Sukses
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (ctx) => AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  title: const Column(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 60,
+                                      ),
+                                      SizedBox(height: 16),
+                                      Text(
+                                        'Order Sukses! 🎉',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                  content: const Text(
+                                    'Pesanan kamu sedang disiapkan. Terima kasih sudah order di Ngopss!',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          //kosongin keranjang
+                                          context
+                                              .read<CartProvider>()
+                                              .clearCart();
+                                          //tutup dialog
+                                          Navigator.pop(ctx);
+                                          //balik ke Dashboard
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            '/dashboard',
+                                          );
+                                        },
+                                        child: const Text('Kembali ke Menu'),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
-                              //context.read<CartProvider>().clearCart();
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
