@@ -12,22 +12,30 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<ProductModel>> getProducts() async {
     try {
-      final response = await _apiService.get('/api/products');
+      final response = await _apiService.get('/v1/products');
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body)['data'];
-        return jsonList
-            .map(
-              (json) => ProductModel(
-                id: json['id'].toString(),
-                name: json['name'],
-                description: json['description'],
-                price: double.parse(json['price'].toString()),
-                imageUrl: json['image_url'],
-                category: json['category'],
-              ),
-            )
-            .toList();
+        return jsonList.map((json) {
+          return ProductModel(
+            id: (json['id'] ?? json['ID'] ?? json['Id']).toString(),
+            name: json['name'] ?? json['Name'] ?? 'Tanpa Nama',
+            description: json['description'] ?? json['Description'] ?? '',
+            price: double.parse(
+              (json['price'] ?? json['Price'] ?? 0).toString(),
+            ),
+            imageUrl:
+                json['image_url'] ??
+                json['ImageUrl'] ??
+                json['ImageURL'] ??
+                json['imageURL'] ??
+                '',
+
+            category: (json['category'] ?? json['Category'] ?? '')
+                .toString()
+                .toLowerCase(),
+          );
+        }).toList();
       } else {
         throw Exception('Gagal mengambil data produk');
       }

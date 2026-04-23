@@ -85,8 +85,8 @@ class _DashboardPageState extends State<DashboardPage> {
               fontWeight: FontWeight.bold,
             ),
             tabs: [
-              Tab(text: 'Ngopss'),
-              Tab(text: 'Mengisi Inspirasimu'),
+              Tab(text: 'Kopi'),
+              Tab(text: 'Teman ngopi'),
             ],
           ),
         ),
@@ -107,7 +107,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.65,
+        childAspectRatio: 0.6,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),

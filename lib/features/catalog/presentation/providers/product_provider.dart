@@ -24,14 +24,15 @@ class CatalogProvider extends ChangeNotifier {
 
     try {
       // ---------------------------------------------------------
-      // Saklar API: Buka komen kalo Golang udah jalan
+      // Saklar API: Buka kalo Golang udah jalan
       // ---------------------------------------------------------
-      // _products = await _repository.getProducts();
+      _products = await _repository.getProducts();
 
       // ---------------------------------------------------------
       // Saklar dummy
       // ---------------------------------------------------------
       await Future.delayed(const Duration(milliseconds: 1000));
+      /*
       _products = [
         //kategori minuman kopi
         const ProductModel(
@@ -94,6 +95,7 @@ class CatalogProvider extends ChangeNotifier {
           category: 'makanan',
         ),
       ];
+      */
     } catch (e) {
       debugPrint('Error fetch API: $e');
     } finally {
