@@ -156,13 +156,13 @@ flutter run
 
 ## Demo Video
 
-**[Watch Full Demo]**
+**[Watch Full Demo]**(video demo on progress)
 
 ## Download Aplikasi
 
 ### Latest Release v1.0.0
 
-[**Download APK**]()
+[**Download APK**](on progress)
 
 ---
 
