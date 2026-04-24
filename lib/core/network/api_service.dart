@@ -4,7 +4,7 @@ import '../services/service_storage.dart';
 
 class ApiService {
   //ganti URL jika Golang udah di-hosting atau pakai IP lokal
-  static const String baseUrl = 'http://localhost:8080';
+  static const String baseUrl = 'http://192.168.100.77:8080/v1';
 
   Future<Map<String, String>> _getHeaders() async {
     final token = await SecureStorageService.getToken();
