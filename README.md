@@ -156,13 +156,7 @@ flutter run
 
 ## Demo Video
 
-**[Watch Full Demo]**(video demo on progress)
-
-## Download Aplikasi
-
-### Latest Release v1.0.0
-
-[**Download APK**](on progress)
+**[Tonto Demo di Youtube](https://youtu.be/jSJIDYv9oJk)**
 
 ---
 
