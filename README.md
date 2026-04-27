@@ -156,7 +156,7 @@ flutter run
 
 ## Demo Video
 
-**[Tonto Demo di Youtube](https://youtu.be/jSJIDYv9oJk)**
+**[Tonton Demo di Youtube](https://youtu.be/jSJIDYv9oJk)**
 
 ---
 
