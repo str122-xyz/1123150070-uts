@@ -12,7 +12,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<ProductModel>> getProducts() async {
     try {
-      final response = await _apiService.get('/v1/products');
+      final response = await _apiService.get('/products');
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body)['data'];

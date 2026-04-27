@@ -12,7 +12,20 @@
           "package_name": "com.example.ngopss"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "596261260198-qiprq5ae5gqtjd71k0t9rfvov5b9v8j5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ngopss",
+            "certificate_hash": "751d6c7c5d8b06a1549f0cbba7afd92d9b1e4f9b"
+          }
+        },
+        {
+          "client_id": "596261260198-4flikl4c6fbgvsdt1jeio10jct9gctid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDFgn4HKyzNX_bRSLCTwMS418QDXZBx4Kg"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596261260198-4flikl4c6fbgvsdt1jeio10jct9gctid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

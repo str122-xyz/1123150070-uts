@@ -15,6 +15,7 @@ class VerifyEmailPage extends StatefulWidget {
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   Timer? _timer;
+  Timer? _countdownTimer;
   bool _resendCooldown = false;
   int _countdown = 60;
 
@@ -27,6 +28,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _countdownTimer?.cancel();
     super.dispose();
   }
 
@@ -37,6 +39,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       final success = await auth.checkEmailVerified();
       if (success && mounted) {
         _timer?.cancel();
+        _countdownTimer?.cancel();
         Navigator.pushReplacementNamed(context, AppRouter.dashboard);
       }
     });
@@ -46,15 +49,23 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if (_resendCooldown) return;
     await context.read<AuthProvider>().resendVerificationEmail();
 
+    if (!mounted) return;
+
     setState(() {
       _resendCooldown = true;
       _countdown = 60;
     });
 
-    Timer.periodic(const Duration(seconds: 1), (t) {
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+
       setState(() {
         _countdown--;
       });
+
       if (_countdown <= 0) {
         t.cancel();
         setState(() => _resendCooldown = false);
