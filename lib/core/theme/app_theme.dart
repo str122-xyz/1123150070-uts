@@ -127,32 +127,32 @@ class AppTheme {
           fontFamily: 'Poppins',
           fontSize: 32,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFEEEEEE),
+          color: AppColors.textPrimaryDark,
         ),
         titleLarge: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 22,
           fontWeight: FontWeight.w600,
-          color: Color(0xFFEEEEEE),
+          color: AppColors.textPrimaryDark,
         ),
         titleMedium: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: Color(0xFFEEEEEE),
+          color: AppColors.textPrimaryDark,
         ),
 
         // untuk Isi/Deskripsi Panjang (Body)
         bodyLarge: TextStyle(
           fontFamily: 'Lora',
           fontSize: 16,
-          color: Color(0xFFE0E0E0),
+          color: AppColors.textPrimaryDark,
           height: 1.5,
         ),
         bodyMedium: TextStyle(
           fontFamily: 'Lora',
           fontSize: 14,
-          color: Color(0xFFBDBDBD),
+          color: AppColors.textSecondaryDark,
           height: 1.5,
         ),
 
@@ -161,47 +161,50 @@ class AppTheme {
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: Color(0xFF8D6E63),
+          color: AppColors.primaryDarkTheme,
         ),
         labelSmall: TextStyle(
           fontFamily: 'Inter',
           fontSize: 11,
-          color: Color(0xFF9E9E9E),
+          color: AppColors.textSecondaryDark,
         ),
       ),
 
       colorScheme: const ColorScheme.dark(
-        primary: Color(0xFF8D6E63), // Primary color
-        surface: Color(0xFF1E1E1E), // Permukaan Card/Navbar
-        background: Color(0xFF121212), // Background paling belakang
-        error: Color(0xFFCF6679),
+        primary: AppColors.primaryDarkTheme, // Primary color
+        surface: AppColors.surfaceDark, // Permukaan Card/Navbar
+        background: AppColors.backgroundDark, // Background paling belakang
+        error: AppColors.errorDark,
       ),
-      scaffoldBackgroundColor: const Color(0xFF121212),
+      scaffoldBackgroundColor: AppColors.backgroundDark,
 
       // Form Input
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF1E1E1E),
+        fillColor: AppColors.surfaceDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
+          borderSide: const BorderSide(color: AppColors.borderDark),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
+          borderSide: const BorderSide(color: AppColors.borderDark),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF8D6E63), width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.primaryDarkTheme,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFCF6679)),
+          borderSide: const BorderSide(color: AppColors.errorDark),
         ),
         hintStyle: const TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,
-          color: Color(0xFF757575),
+          color: AppColors.textHintDark,
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -212,7 +215,7 @@ class AppTheme {
       // button
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF8D6E63),
+          backgroundColor: AppColors.primaryDarkTheme,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
