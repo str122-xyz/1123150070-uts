@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/routes/app_router.dart';
+import 'core/theme/theme_provider.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 import 'features/catalog/presentation/providers/product_provider.dart';
 import 'features/cart/presentation/providers/cart_provider.dart';
@@ -20,6 +21,7 @@ void main() async {
           create: (_) => CatalogProvider()..fetchProducts(),
         ),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -31,12 +33,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ngopss',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      initialRoute: AppRouter.splash,
-      routes: AppRouter.routes,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Ngopss',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeProvider.themeMode,
+          initialRoute: AppRouter.splash,
+          routes: AppRouter.routes,
+        );
+      },
     );
   }
 }
