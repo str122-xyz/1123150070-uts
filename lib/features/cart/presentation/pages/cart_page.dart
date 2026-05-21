@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../providers/cart_provider.dart';
 
 class CartPage extends StatelessWidget {
@@ -9,6 +8,7 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -16,9 +16,6 @@ class CartPage extends StatelessWidget {
           'Keranjang Ngops',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.textPrimary,
-        elevation: 0,
       ),
       body: cart.items.isEmpty
           ? Center(
@@ -28,14 +25,14 @@ class CartPage extends StatelessWidget {
                   Icon(
                     Icons.shopping_bag_outlined,
                     size: 80,
-                    color: Colors.grey.shade400,
+                    color: theme.colorScheme.onSurface.withOpacity(0.5),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'Keranjangmu masih kosong nih!',
                     style: TextStyle(
                       fontSize: 16,
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurface.withOpacity(0.7),
                     ),
                   ),
                 ],
@@ -53,9 +50,6 @@ class CartPage extends StatelessWidget {
 
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(12),
                           child: Row(
@@ -77,19 +71,15 @@ class CartPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       product.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
+                                      style: theme.textTheme.titleMedium,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       'Rp ${product.price.toInt()}',
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -99,7 +89,7 @@ class CartPage extends StatelessWidget {
                                   IconButton(
                                     icon: Icon(
                                       Icons.remove_circle_outline_rounded,
-                                      color: AppColors.primary,
+                                      color: theme.colorScheme.primary,
                                     ),
                                     onPressed: () => context
                                         .read<CartProvider>()
@@ -107,14 +97,15 @@ class CartPage extends StatelessWidget {
                                   ),
                                   Text(
                                     '${cartItem.quantity}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.onSurface,
                                     ),
                                   ),
                                   IconButton(
                                     icon: Icon(
                                       Icons.add_circle_outline_rounded,
-                                      color: AppColors.primary,
+                                      color: theme.colorScheme.primary,
                                     ),
                                     onPressed: () => context
                                         .read<CartProvider>()
@@ -132,10 +123,12 @@ class CartPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.shade200,
+                        color: Colors.black.withOpacity(
+                          0.05,
+                        ), // Bayangan dibikin netral
                         blurRadius: 10,
                         offset: const Offset(0, -5),
                       ),
@@ -151,19 +144,21 @@ class CartPage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Total Pembayaran',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: AppColors.textSecondary,
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.7,
+                                ),
                               ),
                             ),
                             Text(
                               'Rp ${cart.totalAmount.toInt()}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                           ],
@@ -173,57 +168,68 @@ class CartPage extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (cart.items.isEmpty)
-                                return; //kalo kosong ga bisa diklik
+                              if (cart.items.isEmpty) return;
 
-                              //popup Sukses
+                              // popup Sukses
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
-                                builder: (ctx) => AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  title: const Column(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 60,
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(
-                                        'Order Sukses! 🎉',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                  content: const Text(
-                                    'Pesanan kamu sedang disiapkan. Terima kasih sudah order di Ngopss!',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: [
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          //kosongin keranjang
-                                          context
-                                              .read<CartProvider>()
-                                              .clearCart();
-                                          //tutup dialog
-                                          Navigator.pop(ctx);
-                                          //balik ke Dashboard
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            '/dashboard',
-                                          );
-                                        },
-                                        child: const Text('Kembali ke Menu'),
+                                builder: (ctx) {
+                                  final dialogTheme = Theme.of(ctx);
+                                  return AlertDialog(
+                                    backgroundColor: dialogTheme
+                                        .colorScheme
+                                        .surface, // Background dialog
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    title: Column(
+                                      children: [
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 60,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'Order Sukses! 🎉',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: dialogTheme
+                                                .colorScheme
+                                                .onSurface,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    content: Text(
+                                      'Pesanan kamu sedang disiapkan. Terima kasih sudah order di Ngopss!',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: dialogTheme.colorScheme.onSurface
+                                            .withOpacity(0.8),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                    actions: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            context
+                                                .read<CartProvider>()
+                                                .clearCart();
+                                            Navigator.pop(ctx);
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              '/main',
+                                            );
+                                          },
+                                          child: const Text('Kembali ke Menu'),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
                             style: ElevatedButton.styleFrom(

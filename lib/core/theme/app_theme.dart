@@ -161,7 +161,7 @@ class AppTheme {
           fontFamily: 'Inter',
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: AppColors.primaryDarkTheme,
+          color: AppColors.textPrimaryDark,
         ),
         labelSmall: TextStyle(
           fontFamily: 'Inter',
@@ -177,6 +177,39 @@ class AppTheme {
         error: AppColors.errorDark,
       ),
       scaffoldBackgroundColor: AppColors.backgroundDark,
+
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.surfaceDark,
+        elevation: 0,
+        iconTheme: IconThemeData(color: AppColors.accentDark),
+        titleTextStyle: TextStyle(
+          fontFamily: 'Poppins',
+          color: AppColors.accentDark,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+
+      cardTheme: CardThemeData(
+        color: AppColors.surfaceDark,
+        elevation: 4,
+        shadowColor: Colors.black.withOpacity(0.4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.surfaceDark,
+        selectedItemColor: AppColors.accentDark,
+        unselectedItemColor: AppColors.textHintDark,
+        elevation: 10,
+        type: BottomNavigationBarType.fixed,
+      ),
+
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: AppColors.snackbarDark,
+        contentTextStyle: TextStyle(color: Colors.white, fontFamily: 'Inter'),
+        actionTextColor: AppColors.accentDark,
+      ),
 
       // Form Input
       inputDecorationTheme: InputDecorationTheme(
@@ -206,6 +239,8 @@ class AppTheme {
           fontSize: 13,
           color: AppColors.textHintDark,
         ),
+        prefixIconColor: AppColors.textHintDark,
+        suffixIconColor: AppColors.textHintDark,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 12,

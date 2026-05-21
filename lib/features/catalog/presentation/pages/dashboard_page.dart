@@ -73,13 +73,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
               ],
             ),
-            IconButton(
-              icon: const Icon(Icons.logout_outlined),
-              onPressed: () => context.read<AuthProvider>().logout(),
-            ),
           ],
           bottom: const TabBar(
-            indicatorColor: Colors.white,
+            indicatorColor: AppColors.primaryLight,
             labelStyle: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.bold,
@@ -114,32 +110,17 @@ class _DashboardPageState extends State<DashboardPage> {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 8,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
+        return Card(
+          clipBehavior: Clip.antiAlias,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Gambar produk
+              // Gambar produk
               Expanded(
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  child: Image.network(
-                    product.imageUrl,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                child: Image.network(
+                  product.imageUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
               Padding(
@@ -172,7 +153,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                 '${product.name} ditambah ke keranjang!',
                               ),
                               duration: const Duration(seconds: 1),
-                              backgroundColor: AppColors.primary,
                             ),
                           );
                         },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ngopss/features/catalog/presentation/pages/dashboard_page.dart';
+import 'package:ngopss/features/settings/presentation/pages/setting_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,10 +12,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const DashboardPage(),
-    //const SettingsPage(),
-  ];
+  final List<Widget> _pages = [const DashboardPage(), const SettingsPage()];
 
   @override
   Widget build(BuildContext context) {
