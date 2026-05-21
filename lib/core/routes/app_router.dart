@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ngopss/features/main/presentation/pages/main_screen.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/verify_email_page.dart';
@@ -14,6 +15,7 @@ class AppRouter {
   static const String login = '/login';
   static const String register = '/register';
   static const String verifyEmail = '/verify-email';
+  static const String main = '/main';
   static const String dashboard = '/dashboard';
   static const String cart = '/cart';
 
@@ -25,6 +27,7 @@ class AppRouter {
     verifyEmail: (_) => const VerifyEmailPage(),
 
     //bungkus auth guard
+    main: (_) => const AuthGuard(child: MainScreen()),
     dashboard: (_) => const AuthGuard(child: DashboardPage()),
     cart: (_) => const AuthGuard(child: CartPage()),
   };
