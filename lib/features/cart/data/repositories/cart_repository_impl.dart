@@ -1,5 +1,5 @@
 import '../../../../core/constants/api_constants.dart';
-import 'package:ngopss/core/services/dio_client.dart';
+import '../../../../core/services/dio_client.dart';
 import '../../domain/repositories/cart_repository.dart';
 import '../models/cart_model.dart';
 
