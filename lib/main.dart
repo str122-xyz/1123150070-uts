@@ -8,6 +8,7 @@ import 'core/theme/theme_provider.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 import 'features/catalog/presentation/providers/product_provider.dart';
 import 'features/cart/presentation/providers/cart_provider.dart';
+import 'package:ngopss/features/order/presentation/providers/order_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +21,9 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => CatalogProvider()..fetchProducts(),
         ),
-        ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: const MyApp(),
     ),
