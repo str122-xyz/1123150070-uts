@@ -57,4 +57,58 @@ class _CheckoutPageState extends State<CheckoutPage> {
       iconColor: Color(0xFFE65100),
     ),
   ];
+
+  @override
+  void dispose() {
+    _addressCtrl.dispose();
+    _notesCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _placeOrder(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedPaymentMethod == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Pilih metode pembayaran terlebih dahulu',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
+    final orderProv = context.read<OrderProvider>();
+    final cartProv = context.read<CartProvider>();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final success = await orderProv.checkout(
+      shippingAddress: _addressCtrl.text.trim(),
+      notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+      paymentMethod: _selectedPaymentMethod!,
+    );
+
+    if (context.mounted) Navigator.pop(context);
+
+    if (success && context.mounted) {
+      await cartProv.clearCart();
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRouter.orderSuccess,
+        (route) =>
+            route.settings.name == AppRouter.dashboard ||
+            route.settings.name == '/main',
+        arguments: orderProv.lastOrder,
+      );
+    }
+  }
 }
