@@ -16,6 +16,15 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CatalogProvider>().fetchProducts();
+      context.read<CartProvider>().fetchCart();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final catalog = context.watch<CatalogProvider>();
     final user = context.watch<AuthProvider>().firebaseUser;
@@ -115,7 +124,7 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Gambar produk
+              // gambar produk
               Expanded(
                 child: Image.network(
                   product.imageUrl,
@@ -145,16 +154,29 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          context.read<CartProvider>().addItem(product);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${product.name} ditambah ke keranjang!',
+                        onPressed: () async {
+                          final int productIdInt =
+                              int.tryParse(product.id.toString()) ?? 0;
+                          final success = await context
+                              .read<CartProvider>()
+                              .addToCart(productIdInt, 1);
+
+                          if (success && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${product.name} ditambah ke keranjang!',
+                                ),
+                                duration: const Duration(seconds: 1),
                               ),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
+                            );
+                          } else if (!success && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Gagal menambahkan ke keranjang'),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
