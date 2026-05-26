@@ -119,84 +119,234 @@ class _DashboardPageState extends State<DashboardPage> {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return Card(
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // gambar produk
-              Expanded(
+        return GestureDetector(
+          onTap: () => _showProductDetail(context, product),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // gambar produk
+                Expanded(
+                  child: Image.network(
+                    product.imageUrl,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(fontSize: 14),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Rp ${product.price.toInt()}',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final int productIdInt =
+                                int.tryParse(product.id.toString()) ?? 0;
+                            final success = await context
+                                .read<CartProvider>()
+                                .addToCart(productIdInt, 1);
+
+                            if (success && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${product.name} ditambah ke keranjang!',
+                                  ),
+                                  duration: const Duration(seconds: 1),
+                                ),
+                              );
+                            } else if (!success && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Gagal menambahkan ke keranjang',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Tambah',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showProductDetail(BuildContext context, ProductModel product) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _ProductDetailSheet(product: product),
+    );
+  }
+}
+
+//sheet detail produk
+class _ProductDetailSheet extends StatefulWidget {
+  final ProductModel product;
+
+  const _ProductDetailSheet({required this.product});
+
+  @override
+  State<_ProductDetailSheet> createState() => _ProductDetailSheetState();
+}
+
+class _ProductDetailSheetState extends State<_ProductDetailSheet> {
+  int _quantity = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // gambar produk
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
                 child: Image.network(
-                  product.imageUrl,
+                  widget.product.imageUrl,
+                  height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleMedium?.copyWith(fontSize: 14),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Rp ${product.price.toInt()}',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final int productIdInt =
-                              int.tryParse(product.id.toString()) ?? 0;
-                          final success = await context
-                              .read<CartProvider>()
-                              .addToCart(productIdInt, 1);
+            ),
+            const SizedBox(height: 16),
 
-                          if (success && context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${product.name} ditambah ke keranjang!',
-                                ),
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
-                          } else if (!success && context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Gagal menambahkan ke keranjang'),
-                              ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          'Tambah',
-                          style: TextStyle(fontSize: 12),
-                        ),
+            // nama & Kategori
+            Text(widget.product.name, style: theme.textTheme.titleLarge),
+            const SizedBox(height: 4),
+            Text(widget.product.category, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 16),
+
+            // price
+            Text(
+              'Rp ${widget.product.price.toInt()}',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Divider(height: 32),
+
+            // mengatur jumlah
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Jumlah', style: theme.textTheme.titleMedium),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        if (_quantity > 1) setState(() => _quantity--);
+                      },
+                      icon: Icon(
+                        Icons.remove_circle_outline,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    Text('$_quantity', style: theme.textTheme.titleMedium),
+                    IconButton(
+                      onPressed: () => setState(() => _quantity++),
+                      icon: Icon(
+                        Icons.add_circle_outline,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ],
                 ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // button tambah ke Keranjang
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final productIdInt =
+                      int.tryParse(widget.product.id.toString()) ?? 0;
+                  final success = await context.read<CartProvider>().addToCart(
+                    productIdInt,
+                    _quantity,
+                  );
+
+                  if (context.mounted) {
+                    Navigator.pop(context);
+
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${widget.product.name} ditambah ke keranjang!',
+                          ),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Gagal menambahkan ke keranjang'),
+                        ),
+                      );
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(
+                  'Tambah ke Keranjang - Rp ${(widget.product.price * _quantity).toInt()}',
+                ),
               ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
