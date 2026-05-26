@@ -111,4 +111,186 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cartProv = context.watch<CartProvider>();
+    final items = cartProv.cart?.items ?? [];
+    final total = cartProv.cart?.total ?? 0;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Checkout',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ringkasan pesanan
+              Text('Ringkasan Pesanan', style: theme.textTheme.titleLarge),
+              const SizedBox(height: 12),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      ...items.map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.product.name,
+                                      style: theme.textTheme.titleMedium,
+                                    ),
+                                    Text(
+                                      '${item.quantity} x Rp ${item.product.price.toInt()}',
+                                      style: theme.textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                'Rp ${item.subtotal.toInt()}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Rp ${total.toInt()}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // alamat pengiriman
+              Text('Alamat Pengiriman', style: theme.textTheme.titleLarge),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _addressCtrl,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  hintText: 'Masukkan alamat lengkap pengiriman...',
+                ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Alamat wajib diisi'
+                    : null,
+              ),
+              const SizedBox(height: 24),
+
+              // catatan opsional doang
+              Text('Catatan (opsional)', style: theme.textTheme.titleLarge),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _notesCtrl,
+                decoration: const InputDecoration(
+                  hintText: 'Tambahkan catatan untuk ngopss...',
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // method payment
+              Text('Metode Pembayaran', style: theme.textTheme.titleLarge),
+              const SizedBox(height: 12),
+              ..._paymentOptions.map(
+                (option) => Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  color: _selectedPaymentMethod == option.value
+                      ? theme.colorScheme.primary.withOpacity(0.1)
+                      : theme.cardTheme.color,
+                  child: RadioListTile<String>(
+                    value: option.value,
+                    groupValue: _selectedPaymentMethod,
+                    onChanged: (value) =>
+                        setState(() => _selectedPaymentMethod = value),
+                    title: Text(
+                      option.label,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      option.subtitle,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    secondary: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: option.iconColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(option.icon, color: option.iconColor),
+                    ),
+                    activeColor: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
+
+      // button place order
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: items.isEmpty ? null : () => _placeOrder(context),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: const Text('Buat Pesanan'),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
