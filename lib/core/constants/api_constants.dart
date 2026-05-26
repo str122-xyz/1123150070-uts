@@ -18,6 +18,13 @@ class ApiConstants {
   //product endpoints
   static const String products = '/products';
 
+  //cart endpoints
+  static const String cart = '/cart';
+
+  //order endpoints
+  static const String orders = '/orders';
+  static const String checkout = '/orders/checkout';
+
   //timeout
   static const int connectTimeout = 15000;
   static const int receiveTimeout = 15000;
