@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ngopss/features/main/presentation/pages/main_screen.dart';
+import 'package:ngopss/features/order/data/models/order_model.dart';
 import 'package:ngopss/features/order/presentation/pages/checkout_page.dart';
+import 'package:ngopss/features/order/presentation/pages/my_orders_page.dart';
+import 'package:ngopss/features/order/presentation/pages/order_success_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/verify_email_page.dart';
@@ -29,11 +32,18 @@ class AppRouter {
     login: (_) => const LoginPage(),
     register: (_) => const RegisterPage(),
     verifyEmail: (_) => const VerifyEmailPage(),
-    checkout: (_) => const CheckoutPage(),
 
-    //bungkus auth guard
+    // harus login (auth guard)
     main: (_) => const AuthGuard(child: MainScreen()),
     dashboard: (_) => const AuthGuard(child: DashboardPage()),
     cart: (_) => const AuthGuard(child: CartPage()),
+
+    // order & checkout
+    checkout: (_) => const AuthGuard(child: CheckoutPage()),
+    myOrders: (_) => const AuthGuard(child: MyOrdersPage()),
+    orderSuccess: (context) {
+      final order = ModalRoute.of(context)!.settings.arguments as OrderModel;
+      return AuthGuard(child: OrderSuccessPage(order: order));
+    },
   };
 }
