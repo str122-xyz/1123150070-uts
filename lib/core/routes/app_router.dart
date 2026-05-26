@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ngopss/features/main/presentation/pages/main_screen.dart';
+import 'package:ngopss/features/order/presentation/pages/checkout_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/verify_email_page.dart';
@@ -18,6 +19,9 @@ class AppRouter {
   static const String main = '/main';
   static const String dashboard = '/dashboard';
   static const String cart = '/cart';
+  static const String checkout = '/checkout';
+  static const String orderSuccess = '/order-success';
+  static const String myOrders = '/my-orders';
 
   static Map<String, WidgetBuilder> get routes => {
     splash: (_) => const SplashPage(),
@@ -25,6 +29,7 @@ class AppRouter {
     login: (_) => const LoginPage(),
     register: (_) => const RegisterPage(),
     verifyEmail: (_) => const VerifyEmailPage(),
+    checkout: (_) => const CheckoutPage(),
 
     //bungkus auth guard
     main: (_) => const AuthGuard(child: MainScreen()),
