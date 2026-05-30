@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLoginResult(bool ok, AuthProvider auth) {
     if (ok) {
-      Navigator.pushReplacementNamed(context, AppRouter.dashboard);
+      Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
     } else if (auth.status == AuthStatus.emailNotVerified) {
       Navigator.pushReplacementNamed(context, AppRouter.verifyEmail);
     } else {
@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Daftar',
                           style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -30,7 +30,7 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.pushReplacementNamed(context, AppRouter.onboarding);
     } else if (token != null) {
       //Udah pernah install dan token login masih ada
-      Navigator.pushReplacementNamed(context, AppRouter.dashboard);
+      Navigator.pushReplacementNamed(context, AppRouter.main);
     } else {
       //Udah pernah install tapi belum login / abis logout
       Navigator.pushReplacementNamed(context, AppRouter.login);

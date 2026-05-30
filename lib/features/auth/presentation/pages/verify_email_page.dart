@@ -40,7 +40,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       if (success && mounted) {
         _timer?.cancel();
         _countdownTimer?.cancel();
-        Navigator.pushReplacementNamed(context, AppRouter.dashboard);
+        Navigator.pushReplacementNamed(context, AppRouter.main);
       }
     });
   }

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../features/main/presentation/pages/main_screen.dart';
+import '../../features/order/data/models/order_model.dart';
+import '../../features/order/presentation/pages/checkout_page.dart';
+import '../../features/order/presentation/pages/my_orders_page.dart';
+import '../../features/order/presentation/pages/order_detail_page.dart';
+import '../../features/order/presentation/pages/order_success_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/verify_email_page.dart';
@@ -14,8 +20,13 @@ class AppRouter {
   static const String login = '/login';
   static const String register = '/register';
   static const String verifyEmail = '/verify-email';
+  static const String main = '/main';
   static const String dashboard = '/dashboard';
   static const String cart = '/cart';
+  static const String checkout = '/checkout';
+  static const String orderSuccess = '/order-success';
+  static const String myOrders = '/my-orders';
+  static const String orderDetail = '/order-detail';
 
   static Map<String, WidgetBuilder> get routes => {
     splash: (_) => const SplashPage(),
@@ -24,8 +35,18 @@ class AppRouter {
     register: (_) => const RegisterPage(),
     verifyEmail: (_) => const VerifyEmailPage(),
 
-    //bungkus auth guard
+    // harus login (auth guard)
+    main: (_) => const AuthGuard(child: MainScreen()),
     dashboard: (_) => const AuthGuard(child: DashboardPage()),
     cart: (_) => const AuthGuard(child: CartPage()),
+
+    // order & checkout
+    checkout: (_) => const AuthGuard(child: CheckoutPage()),
+    myOrders: (_) => const AuthGuard(child: MyOrdersPage()),
+    orderSuccess: (context) {
+      final order = ModalRoute.of(context)!.settings.arguments as OrderModel;
+      return AuthGuard(child: OrderSuccessPage(order: order));
+    },
+    orderDetail: (_) => const AuthGuard(child: OrderDetailPage()),
   };
 }
