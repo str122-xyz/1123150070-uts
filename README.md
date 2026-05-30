@@ -25,6 +25,28 @@ Proyek ini dikembangkan untuk memenuhi tugas Ujian Tengah Semester (UTS) matakul
 * Database: MySQL (via XAMPP)
 * Authentication: Firebase Auth
 
+## Preview
+
+**Login**
+<p>
+  <img src="assets/images/ss.png" width="200"/>
+</p>
+
+**Dashboard**
+<p>
+  <img src="assets/images/ss2.png" width="200"/>
+</p>
+
+**Cart**
+<p>
+  <img src="assets/images/ss3.png" width="200"/>
+</p>
+
+**Setting**
+<p>
+  <img src="assets/images/ss4.png" width="200"/>
+</p>
+
 ## Dibangun Dengan 
 
 ### Frontend (Client Application)
