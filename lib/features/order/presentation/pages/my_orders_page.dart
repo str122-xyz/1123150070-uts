@@ -15,8 +15,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     super.initState();
     // ambil data pesanan pas halaman dibuka
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // pastikan ada method fetchMyOrders di OrderProvider
-      // jika belum ada, panggil checkoutStatus/kosong dulu sementara
+      context.read<OrderProvider>().fetchOrders();
     });
   }
 
@@ -51,85 +50,111 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Pesanan Saya')),
       body: orders.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+          ? _buildEmptyState(theme)
+          : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                final order = orders[index];
+                return _buildOrderCard(context, order, theme);
+              },
+            ),
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 80,
+            color: theme.colorScheme.onSurface.withOpacity(0.3),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Belum ada pesanan',
+            style: TextStyle(
+              fontSize: 16,
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrderCard(BuildContext context, dynamic order, ThemeData theme) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 14),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, '/order-detail', arguments: order.id);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.receipt_long_outlined,
-                    size: 80,
-                    color: theme.colorScheme.onSurface.withOpacity(0.5),
-                  ),
-                  const SizedBox(height: 16),
                   Text(
-                    'Belum ada pesanan',
-                    style: TextStyle(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    'Order #${order.id}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _statusColor(order.status).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: _statusColor(order.status).withOpacity(0.5),
+                      ),
+                    ),
+                    child: Text(
+                      _statusLabel(order.status),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: _statusColor(order.status),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                final order = orders[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Order #${order.id}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _statusColor(order.status).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _statusColor(order.status),
-                            ),
-                          ),
-                          child: Text(
-                            _statusLabel(order.status),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _statusColor(order.status),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 8),
-                        Text(
-                          '${order.items.length} Barang',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Total: Rp ${order.totalAmount.toInt()}',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+              const SizedBox(height: 12),
+              Divider(color: theme.colorScheme.onSurface.withOpacity(0.1)),
+              const SizedBox(height: 8),
+
+              Text(
+                '${order.items.length} Barang',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Total: Rp ${order.totalAmount.toInt()}',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
