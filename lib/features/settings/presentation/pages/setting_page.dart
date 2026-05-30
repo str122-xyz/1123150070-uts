@@ -52,23 +52,45 @@ class SettingsPage extends StatelessWidget {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Apakah kamu yakin ingin keluar?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Keluar Akun'),
+          content: const Text(
+            'Apakah kamu yakin ingin keluar dari aplikasi Ngopss?',
           ),
-          TextButton(
-            onPressed: () {
-              context.read<AuthProvider>().logout();
-              Navigator.pop(context);
-            },
-            child: const Text('Keluar', style: TextStyle(color: Colors.red)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: const Text('Batal', style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext);
+                await context.read<AuthProvider>().logout();
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  );
+                }
+              },
+              child: const Text(
+                'Keluar',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

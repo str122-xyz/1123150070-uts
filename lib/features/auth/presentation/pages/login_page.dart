@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLoginResult(bool ok, AuthProvider auth) {
     if (ok) {
-      Navigator.pushReplacementNamed(context, AppRouter.main);
+      Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
     } else if (auth.status == AuthStatus.emailNotVerified) {
       Navigator.pushReplacementNamed(context, AppRouter.verifyEmail);
     } else {
