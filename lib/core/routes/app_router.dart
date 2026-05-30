@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ngopss/features/main/presentation/pages/main_screen.dart';
-import 'package:ngopss/features/order/data/models/order_model.dart';
-import 'package:ngopss/features/order/presentation/pages/checkout_page.dart';
-import 'package:ngopss/features/order/presentation/pages/my_orders_page.dart';
-import 'package:ngopss/features/order/presentation/pages/order_success_page.dart';
+import '../../features/main/presentation/pages/main_screen.dart';
+import '../../features/order/data/models/order_model.dart';
+import '../../features/order/presentation/pages/checkout_page.dart';
+import '../../features/order/presentation/pages/my_orders_page.dart';
+import '../../features/order/presentation/pages/order_detail_page.dart';
+import '../../features/order/presentation/pages/order_success_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/verify_email_page.dart';
@@ -25,6 +26,7 @@ class AppRouter {
   static const String checkout = '/checkout';
   static const String orderSuccess = '/order-success';
   static const String myOrders = '/my-orders';
+  static const String orderDetail = '/order-detail';
 
   static Map<String, WidgetBuilder> get routes => {
     splash: (_) => const SplashPage(),
@@ -45,5 +47,6 @@ class AppRouter {
       final order = ModalRoute.of(context)!.settings.arguments as OrderModel;
       return AuthGuard(child: OrderSuccessPage(order: order));
     },
+    orderDetail: (_) => const AuthGuard(child: OrderDetailPage()),
   };
 }
