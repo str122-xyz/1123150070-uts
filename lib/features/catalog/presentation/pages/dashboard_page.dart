@@ -86,7 +86,7 @@ class _DashboardPageState extends State<DashboardPage> {
           bottom: const TabBar(
             indicatorColor: AppColors.primaryLight,
             labelStyle: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Poppins',
               fontWeight: FontWeight.bold,
             ),
             tabs: [
@@ -251,7 +251,7 @@ class _ProductDetailSheetState extends State<_ProductDetailSheet> {
                   widget.product.imageUrl,
                   height: 200,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -271,6 +271,18 @@ class _ProductDetailSheetState extends State<_ProductDetailSheet> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 16),
+
+            // deskripsi
+            Text(
+              'Deskripsi',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(widget.product.description, style: theme.textTheme.bodyMedium),
+
             const Divider(height: 32),
 
             // mengatur jumlah

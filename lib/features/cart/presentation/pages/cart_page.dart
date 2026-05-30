@@ -174,7 +174,7 @@ class CartPage extends StatelessWidget {
                     Text(
                       'Total Pembayaran',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
