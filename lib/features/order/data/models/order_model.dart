@@ -1,9 +1,12 @@
+import 'package:ngopss/features/catalog/data/models/product_model.dart';
+
 class OrderItemModel {
   final int productId;
   final String productName;
   final double price;
   final int quantity;
   final double subtotal;
+  final ProductModel? product;
 
   OrderItemModel({
     required this.productId,
@@ -11,6 +14,7 @@ class OrderItemModel {
     required this.price,
     required this.quantity,
     required this.subtotal,
+    this.product,
   });
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,9 @@ class OrderItemModel {
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       quantity: json['quantity'] as int? ?? 0,
       subtotal: (json['subtotal'] as num?)?.toDouble() ?? 0.0,
+      product: json['product'] != null
+          ? ProductModel.fromJson(json['product'])
+          : null,
     );
   }
 }
