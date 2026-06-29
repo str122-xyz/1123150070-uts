@@ -49,6 +49,7 @@ class OrderProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       _setError(e.toString());
+      notifyListeners();
       return false;
     }
   }
