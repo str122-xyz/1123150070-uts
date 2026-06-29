@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../cart/presentation/providers/cart_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/order_provider.dart';
+import 'package:app_links/app_links.dart';
+import 'dart:async';
 import '../../../../core/routes/app_router.dart';
 
 class _PaymentOption {
@@ -28,13 +31,148 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
+  String? _selectedPaymentMethod;
+  StreamSubscription<Uri>? _sub;
   final _formKey = GlobalKey<FormState>();
   final _addressCtrl = TextEditingController();
   final _notesCtrl = TextEditingController();
+  final _appLinks = AppLinks();
 
-  String? _selectedPaymentMethod;
+  Future<void> _handleCheckout() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedPaymentMethod == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Pilih metode pembayaran terlebih dahulu!'),
+        ),
+      );
+      return;
+    }
+
+    final orderProv = context.read<OrderProvider>();
+    final total = context.read<CartProvider>().cart?.total ?? 0;
+
+    if (_selectedPaymentMethod == 'emoney') {
+      final Uri paymentUri = Uri(
+        scheme: 'emoney',
+        host: 'pay',
+        queryParameters: {
+          'merchant': 'ngopss',
+          'order_id':
+              (orderProv.lastOrder?.id ??
+                      'ORD-${DateTime.now().millisecondsSinceEpoch}')
+                  .toString(),
+          'amount': total.toString(),
+          'description': 'Pembayaran Ngopss',
+          'callback': 'ngopss://payment-result',
+        },
+      );
+
+      try {
+        await launchUrl(paymentUri, mode: LaunchMode.externalApplication);
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Aplikasi Eh-MyWallets tidak ditemukan!"),
+            ),
+          );
+        }
+      }
+    } else {
+      await _placeOrder();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _sub = _appLinks.uriLinkStream.listen((uri) {
+      debugPrint('[DeepLink] Callback diterima: $uri');
+      if (uri.scheme == 'ngopss' && uri.host == 'payment-result') {
+        final status = uri.queryParameters['status'];
+
+        if (status == 'success') {
+          _placeOrder(deepLinkData: {'from': 'emoney'});
+        } else if (status == 'failed') {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Pembayaran dibatalkan atau gagal!"),
+                backgroundColor: Colors.orange,
+              ),
+            );
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    _addressCtrl.dispose();
+    _notesCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _placeOrder({Map<String, dynamic>? deepLinkData}) async {
+    final orderProv = context.read<OrderProvider>();
+    final cartProv = context.read<CartProvider>();
+
+    final isFromDeepLink = deepLinkData != null;
+    final paymentMethod = isFromDeepLink ? 'emoney' : _selectedPaymentMethod!;
+
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    try {
+      final success = await orderProv.checkout(
+        shippingAddress: isFromDeepLink
+            ? "Jl. Jendral Rusdi No. 706, Ngawi, Konoha 6331"
+            : _addressCtrl.text.trim(),
+        notes: isFromDeepLink ? "Takaran Gulan 2kg" : _notesCtrl.text.trim(),
+        paymentMethod: paymentMethod,
+      );
+
+      if (mounted) Navigator.pop(context);
+
+      if (success && mounted) {
+        if (!isFromDeepLink) await cartProv.clearCart();
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRouter.orderSuccess,
+          (route) =>
+              route.settings.name == AppRouter.dashboard ||
+              route.settings.name == '/main',
+          arguments: orderProv.lastOrder,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
 
   static const List<_PaymentOption> _paymentOptions = [
+    _PaymentOption(
+      value: 'emoney',
+      label: 'Eh-MyWallets',
+      subtitle: 'Bayar instan pakai Eh-MyWallets',
+      icon: Icons.account_balance_wallet,
+      iconColor: Color(0xFF00ADB5),
+    ),
     _PaymentOption(
       value: 'gopay',
       label: 'GoPay',
@@ -57,60 +195,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       iconColor: Color(0xFFE65100),
     ),
   ];
-
-  @override
-  void dispose() {
-    _addressCtrl.dispose();
-    _notesCtrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _placeOrder(BuildContext context) async {
-    if (!_formKey.currentState!.validate()) return;
-
-    if (_selectedPaymentMethod == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'Pilih metode pembayaran terlebih dahulu',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-      return;
-    }
-
-    final orderProv = context.read<OrderProvider>();
-    final cartProv = context.read<CartProvider>();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
-    final success = await orderProv.checkout(
-      shippingAddress: _addressCtrl.text.trim(),
-      notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
-      paymentMethod: _selectedPaymentMethod!,
-    );
-
-    if (context.mounted) Navigator.pop(context);
-
-    if (success && context.mounted) {
-      await cartProv.clearCart();
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRouter.orderSuccess,
-        (route) =>
-            route.settings.name == AppRouter.dashboard ||
-            route.settings.name == '/main',
-        arguments: orderProv.lastOrder,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +366,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: items.isEmpty ? null : () => _placeOrder(context),
+              onPressed: _handleCheckout,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
