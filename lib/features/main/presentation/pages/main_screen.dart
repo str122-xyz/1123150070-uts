@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ngopss/features/catalog/presentation/pages/dashboard_page.dart';
+import 'package:ngopss/features/order/presentation/pages/my_orders_page.dart';
 import 'package:ngopss/features/settings/presentation/pages/setting_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,7 +13,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [const DashboardPage(), const SettingsPage()];
+  final List<Widget> _pages = [
+    const DashboardPage(),
+    const MyOrdersPage(),
+    const SettingsPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,10 @@ class _MainScreenState extends State<MainScreen> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.coffee), label: 'Menu'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_outlined),
+            label: 'Riwayat',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Pengaturan',
