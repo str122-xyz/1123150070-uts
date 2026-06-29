@@ -47,7 +47,7 @@ class OrderSuccessPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Pesanan Berhasil!',
+              'Pembayaran Berhasil!',
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -103,14 +103,23 @@ class OrderSuccessPage extends StatelessWidget {
                     const Divider(),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.info_outlined,
-                        color: Colors.orange,
+                        color: (order.paymentMethod.toLowerCase() == 'emoney')
+                            ? Colors.green
+                            : Colors.orange,
                       ),
                       title: Text('Status', style: theme.textTheme.bodySmall),
                       subtitle: Text(
-                        _statusLabel(order.status),
-                        style: theme.textTheme.titleMedium,
+                        (order.paymentMethod.toLowerCase() == 'emoney')
+                            ? 'Pembayaran Berhasil'
+                            : _statusLabel(order.status),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: (order.paymentMethod.toLowerCase() == 'emoney')
+                              ? Colors.green
+                              : null,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
