@@ -64,6 +64,20 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    final isEmoney = order.paymentMethod?.toLowerCase() == 'emoney';
+
+    // teks status
+    String statusText = order.status;
+    if (statusText.toLowerCase() == 'pending') {
+      statusText = 'Menunggu Pembayaran';
+    }
+    if (isEmoney) {
+      statusText = 'Pembayaran Berhasil';
+    }
+
+    //warna status
+    final statusColor = isEmoney ? Colors.green : _statusColor(order.status);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -89,13 +103,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: _statusColor(order.status).withOpacity(0.1),
+                        color: statusColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        order.status,
+                        statusText,
                         style: TextStyle(
-                          color: _statusColor(order.status),
+                          color: statusColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -186,7 +200,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                const Text(
+                  'Catatan Pesanan',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  order.notes,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 const Divider(),
+
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

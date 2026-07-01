@@ -86,6 +86,15 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
   }
 
   Widget _buildOrderCard(BuildContext context, dynamic order, ThemeData theme) {
+    // Cek apakah transaksinya pake e-money
+    final isEmoney = order.paymentMethod?.toLowerCase() == 'emoney';
+    // jika e-money paksa teksnya sukses, nggak pake default
+    final statusText = isEmoney
+        ? 'Pembayaran Berhasil'
+        : _statusLabel(order.status);
+    // jika e-money paksa warnanya hijau, nggak pake warna default
+    final statusColor = isEmoney ? Colors.green : _statusColor(order.status);
+
     return Card(
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 14),
@@ -116,17 +125,15 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: _statusColor(order.status).withOpacity(0.1),
+                      color: statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: _statusColor(order.status).withOpacity(0.5),
-                      ),
+                      border: Border.all(color: statusColor.withOpacity(0.5)),
                     ),
                     child: Text(
-                      _statusLabel(order.status),
+                      statusText,
                       style: TextStyle(
                         fontSize: 12,
-                        color: _statusColor(order.status),
+                        color: statusColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

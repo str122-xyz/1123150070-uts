@@ -8,7 +8,7 @@ class ApiConstants {
       return 'http://localhost:8080/v1';
     } else {
       // Android
-      return 'http://192.168.1.11:8080/v1';
+      return 'http://192.168.1.4:8080/v1';
     }
   }
 
